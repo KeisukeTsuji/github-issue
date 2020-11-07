@@ -12,17 +12,8 @@ class ListenPage extends Component {
       issuesDisplayed: [],
       offset: 0,
       parPage: 10,
-      pageNumber: 1,
+      pageNumber: 0,
     };
-  }
-  setInitIssuesDisplayed(data) {
-    const tmpArr = [];
-    for (let i = 0; i < 10; i++) {
-      tmpArr.push(this.state.allIssues[i]);
-    }
-    this.setState({
-      issuesDisplayed: tmpArr,
-    });
   }
   fetchGithubIssues() {
     const request = axios.create({
@@ -34,7 +25,7 @@ class ListenPage extends Component {
         this.setState({
           allIssues: res.data,
         });
-        this.setInitIssuesDisplayed(res.data);
+        this.setPageNumber(window.location.search);
       })
       .catch((e) => {
         console.error(e);
@@ -57,14 +48,17 @@ class ListenPage extends Component {
   handleClickPagination(e, n) {
     history.push(`/issues?page=${n}`);
   }
+  setPageNumber(search) {
+    const tmpNumber = Number(search.replace("?page=", ""));
+    this.displayListPathMatched(tmpNumber);
+    this.setState({
+      pageNumber: tmpNumber,
+    });
+  }
   componentDidMount() {
     this.fetchGithubIssues();
-    this.unlisten = history.listen((location, action) => {
-      const tmpNumber = Number(location.search.replace("?page=", ""));
-      this.displayListPathMatched(tmpNumber);
-      this.setState({
-        pageNumber: tmpNumber,
-      });
+    this.unlisten = history.listen((location) => {
+      this.setPageNumber(location.search)
     });
   }
   render() {
@@ -90,6 +84,10 @@ class ListenPage extends Component {
           </div>
         </div>
         <style jsx>{`
+          a {
+            text-decoration: none;
+            color: black;
+          }
           .list-page {
             display: flex;
             justify-content: center;
