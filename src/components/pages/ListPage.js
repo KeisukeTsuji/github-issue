@@ -75,7 +75,6 @@ class ListenPage extends Component {
                 <IssueCard
                   number={userData.number}
                   title={userData.title}
-                  body={userData.body}
                 />
               </div>
             ))}
