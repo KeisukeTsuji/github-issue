@@ -16,18 +16,17 @@ class ListenPage extends Component {
     };
   }
   setAllIssues(data, currentComponent) {
-    currentComponent.setState({
-      allIssues: data,
-    }, () => {
-      currentComponent.setPageNumber(window.location.search);
-    });
+    currentComponent.setState(
+      {
+        allIssues: data,
+      },
+      () => {
+        currentComponent.setPageNumber(window.location.search);
+      }
+    );
   }
   fetchGithubIssues() {
-    getGithubApi(
-      "/repos/facebook/react/issues",
-      this.setAllIssues,
-      this
-    );
+    getGithubApi("/repos/facebook/react/issues", this.setAllIssues, this);
   }
   displayListPathMatched(n) {
     this.setState({
@@ -59,23 +58,30 @@ class ListenPage extends Component {
       this.setPageNumber(location.search);
     });
   }
+  toFirstPage() {
+    history.push("/issues?page=1");
+  }
+  toLastPage(my) {
+    history.push(`/issues?page=${Math.floor(my.state.allIssues.length / 10)}`);
+  }
   render() {
     return (
       <Fragment>
-        <Pagination
-          count={Math.floor(this.state.allIssues.length / 10)}
-          page={this.state.pageNumber}
-          color="primary"
-          onChange={(e, n) => this.handleClickPagination(e, n)}
-        />
+        <div className="pagination-container">
+          <button onClick={this.toFirstPage}>最初</button>
+          <Pagination
+            count={Math.floor(this.state.allIssues.length / 10)}
+            page={this.state.pageNumber}
+            color="primary"
+            onChange={(e, n) => this.handleClickPagination(e, n)}
+          />
+          <button onClick={() => this.toLastPage(this)}>最後</button>
+        </div>
         <div className="list-page">
           <div className="issue-card-container">
             {this.state.issuesDisplayed.map((userData) => (
               <div key={userData.number} className="issue-card-wrapper">
-                <IssueCard
-                  number={userData.number}
-                  title={userData.title}
-                />
+                <IssueCard number={userData.number} title={userData.title} />
               </div>
             ))}
           </div>
@@ -88,6 +94,9 @@ class ListenPage extends Component {
           .list-page {
             display: flex;
             justify-content: center;
+          }
+          .pagination-container {
+            display: flex;
           }
         `}</style>
       </Fragment>
