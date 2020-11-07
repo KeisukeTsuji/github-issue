@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
-export default class IssueCard extends React.Component {
+class IssueCard extends Component {
   render() {
     return (
-      <Fragment>
+      <Link to={"issues/" + this.props.number}>
         <article>
           <h4>{this.props.title}</h4>
           <p>{this.props.number}</p>
@@ -16,7 +17,9 @@ export default class IssueCard extends React.Component {
             border: 1px solid gray;
           }
         `}</style>
-      </Fragment>
+      </Link>
     );
   }
 }
+
+export default IssueCard;

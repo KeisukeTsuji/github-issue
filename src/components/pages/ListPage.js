@@ -2,8 +2,9 @@ import React, { Component, Fragment } from "react";
 import axios from "axios";
 import Pagination from "@material-ui/lab/Pagination";
 import IssueCard from "../molecules/IssueCard";
-
-class App extends Component {
+import history from "../../config/history";
+import { withRouter } from "react-router";
+class ListenPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -54,19 +55,16 @@ class App extends Component {
     });
   }
   handleClickPagination(e, n) {
-    const { history } = this.props;
     history.push(`/issues?page=${n}`);
   }
-  componentWillMount() {
+  componentDidMount() {
     this.fetchGithubIssues();
-    this.unlisten = this.props.history.listen((location, action) => {
-      if (action === "PUSH" || action === "POP") {
-        const tmpNumber = Number(location.search.replace("?page=", ""));
-        this.displayListPathMatched(tmpNumber);
-        this.setState({
-          pageNumber: tmpNumber,
-        });
-      }
+    this.unlisten = history.listen((location, action) => {
+      const tmpNumber = Number(location.search.replace("?page=", ""));
+      this.displayListPathMatched(tmpNumber);
+      this.setState({
+        pageNumber: tmpNumber,
+      });
     });
   }
   render() {
@@ -81,7 +79,7 @@ class App extends Component {
         <div className="list-page">
           <div className="issue-card-container">
             {this.state.issuesDisplayed.map((userData) => (
-              <div className="issue-card-wrapper">
+              <div key={userData.number} className="issue-card-wrapper">
                 <IssueCard
                   number={userData.number}
                   title={userData.title}
@@ -101,4 +99,4 @@ class App extends Component {
     );
   }
 }
-export default App;
+export default withRouter(ListenPage);
