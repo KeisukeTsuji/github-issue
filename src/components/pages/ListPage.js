@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
-import axios from "axios";
 import Pagination from "@material-ui/lab/Pagination";
 import IssueCard from "../molecules/IssueCard";
 import history from "../../config/history";
 import { withRouter } from "react-router";
+import getGithubApi from "../../api/githubApi";
 class ListenPage extends Component {
   constructor() {
     super();
@@ -15,21 +15,19 @@ class ListenPage extends Component {
       pageNumber: 0,
     };
   }
-  fetchGithubIssues() {
-    const request = axios.create({
-      baseURL: "https://api.github.com",
+  setAllIssues(data, currentComponent) {
+    currentComponent.setState({
+      allIssues: data,
+    }, () => {
+      currentComponent.setPageNumber(window.location.search);
     });
-    request
-      .get("/repos/facebook/react/issues")
-      .then((res) => {
-        this.setState({
-          allIssues: res.data,
-        });
-        this.setPageNumber(window.location.search);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+  }
+  fetchGithubIssues() {
+    getGithubApi(
+      "/repos/facebook/react/issues",
+      this.setAllIssues,
+      this
+    );
   }
   displayListPathMatched(n) {
     this.setState({
@@ -58,7 +56,7 @@ class ListenPage extends Component {
   componentDidMount() {
     this.fetchGithubIssues();
     this.unlisten = history.listen((location) => {
-      this.setPageNumber(location.search)
+      this.setPageNumber(location.search);
     });
   }
   render() {
