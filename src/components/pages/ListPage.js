@@ -1,106 +1,87 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import IssueCard from "../molecules/IssueCard";
 import history from "../../config/history";
 import { withRouter } from "react-router";
 import getGithubApi from "../../api/githubApi";
-class ListenPage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      allIssues: [],
-      issuesDisplayed: [],
-      offset: 0,
-      parPage: 10,
-      pageNumber: 0,
-    };
-  }
-  setAllIssues(data, currentComponent) {
-    currentComponent.setState(
-      {
-        allIssues: data,
-      },
-      () => {
-        currentComponent.setPageNumber(window.location.search);
-      }
-    );
-  }
-  fetchGithubIssues() {
-    getGithubApi("/repos/facebook/react/issues", this.setAllIssues, this);
-  }
-  displayListPathMatched(n) {
-    this.setState({
-      issuesDisplayed: [],
+
+const ListenPage = () => {
+  const [allIssues, setAllIssues] = useState([]);
+  const [issuesDisplayed, setIssuesDisplayed] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+
+  useEffect(() => {
+    getGithubApi("/repos/facebook/react/issues", setsAllIssues);
+  }, []);
+  useEffect(() => {
+    history.listen((location) => {
+      setsPageNumber(location.search, allIssues);
     });
+  }, [allIssues]);
+
+  const setsAllIssues = (issues) => {
+    setAllIssues(issues);
+    setsPageNumber(window.location.search, issues);
+  };
+  const displayListPathMatched = (n, issues) => {
+    setIssuesDisplayed([]);
     const tmpArr = [];
     for (let i = (n - 1) * 10; i < n * 10; i++) {
-      if (this.state.allIssues[i]) {
-        tmpArr.push(this.state.allIssues[i]);
+      if (issues[i]) {
+        tmpArr.push(issues[i]);
       }
     }
-    this.setState({
-      issuesDisplayed: tmpArr,
-    });
-  }
-  handleClickPagination(e, n) {
+    setIssuesDisplayed(tmpArr);
+  };
+  const handleClickPagination = (e, n) => {
     history.push(`/issues?page=${n}`);
-  }
-  setPageNumber(search) {
+  };
+  const setsPageNumber = (search, issues) => {
     const tmpNumber = Number(search.replace("?page=", ""));
-    this.displayListPathMatched(tmpNumber);
-    this.setState({
-      pageNumber: tmpNumber,
-    });
-  }
-  componentDidMount() {
-    this.fetchGithubIssues();
-    this.unlisten = history.listen((location) => {
-      this.setPageNumber(location.search);
-    });
-  }
-  toFirstPage() {
+    displayListPathMatched(tmpNumber, issues);
+    setPageNumber(tmpNumber);
+  };
+  const toFirstPage = () => {
     history.push("/issues?page=1");
-  }
-  toLastPage(my) {
-    history.push(`/issues?page=${Math.floor(my.state.allIssues.length / 10)}`);
-  }
-  render() {
-    return (
-      <Fragment>
-        <div className="pagination-container">
-          <button onClick={this.toFirstPage}>最初</button>
-          <Pagination
-            count={Math.floor(this.state.allIssues.length / 10)}
-            page={this.state.pageNumber}
-            color="primary"
-            onChange={(e, n) => this.handleClickPagination(e, n)}
-          />
-          <button onClick={() => this.toLastPage(this)}>最後</button>
+  };
+  const toLastPage = () => {
+    history.push(`/issues?page=${Math.floor(allIssues.length / 10)}`);
+  };
+  return (
+    <Fragment>
+      <div className="pagination-container">
+        <button onClick={toFirstPage}>最初</button>
+        <Pagination
+          count={Math.floor(allIssues.length / 10)}
+          page={pageNumber}
+          color="primary"
+          onChange={(e, n) => handleClickPagination(e, n)}
+        />
+        <button onClick={() => toLastPage()}>最後</button>
+      </div>
+      <div className="list-page">
+        <div className="issue-card-container">
+          {issuesDisplayed.map((userData) => (
+            <div key={userData.number} className="issue-card-wrapper">
+              <IssueCard number={userData.number} title={userData.title} />
+            </div>
+          ))}
         </div>
-        <div className="list-page">
-          <div className="issue-card-container">
-            {this.state.issuesDisplayed.map((userData) => (
-              <div key={userData.number} className="issue-card-wrapper">
-                <IssueCard number={userData.number} title={userData.title} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <style jsx>{`
-          a {
-            text-decoration: none;
-            color: black;
-          }
-          .list-page {
-            display: flex;
-            justify-content: center;
-          }
-          .pagination-container {
-            display: flex;
-          }
-        `}</style>
-      </Fragment>
-    );
-  }
-}
+      </div>
+      <style>{`
+        a {
+          text-decoration: none;
+          color: black;
+        }
+        .list-page {
+          display: flex;
+          justify-content: center;
+        }
+        .pagination-container {
+          display: flex;
+        }
+      `}</style>
+    </Fragment>
+  );
+};
 export default withRouter(ListenPage);
