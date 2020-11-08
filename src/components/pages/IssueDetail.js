@@ -9,13 +9,10 @@ const IssueCard = () => {
   const isLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
-    getIssueNumber(window.location.pathname);
+    fetchGithubIssueDetail(
+      Number(window.location.pathname.replace("/issues/", ""))
+    );
   }, []);
-
-  const getIssueNumber = (search) => {
-    const issueNumber = Number(search.replace("/issues/", ""));
-    fetchGithubIssueDetail(issueNumber);
-  };
   const setsIssue = (data) => {
     setIssue(data);
   };
