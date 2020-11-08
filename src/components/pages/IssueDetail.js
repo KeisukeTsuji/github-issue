@@ -1,35 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router";
 import getGithubApi from "../../api/githubApi";
 
-export default class IssueCard extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      issue: {},
-    };
-  }
-  getIssueNumber(search) {
+const IssueCard = () => {
+  const [issue, setIssue] = useState({});
+
+  useEffect(() => {
+    getIssueNumber(window.location.pathname);
+  }, []);
+
+  const getIssueNumber = (search) => {
     const issueNumber = Number(search.replace("/issues/", ""));
-    this.fetchGithubIssueDetail(issueNumber);
-  }
-  setIssue(data, currentComponent) {
-    currentComponent.setState({
-      issue: data,
-    });
-  }
-  fetchGithubIssueDetail(number) {
-    getGithubApi(`/repos/facebook/react/issues/${number}`, this.setIssue, this);
-  }
-  componentDidMount() {
-    this.getIssueNumber(window.location.pathname);
-  }
-  render() {
-    return (
-      <div>
-        <p>{this.state.issue.number}</p>
-        <p>{this.state.issue.title}</p>
-        <p>{this.state.issue.body}</p>
-      </div>
-    );
-  }
-}
+    fetchGithubIssueDetail(issueNumber);
+  };
+  const setsIssue = (data) => {
+    setIssue(data);
+  };
+  const fetchGithubIssueDetail = (number) => {
+    getGithubApi(`/repos/facebook/react/issues/${number}`, setsIssue);
+  };
+  return (
+    <div>
+      <p>{issue.number}</p>
+      <p>{issue.title}</p>
+      <p>{issue.body}</p>
+    </div>
+  );
+};
+
+export default withRouter(IssueCard);
