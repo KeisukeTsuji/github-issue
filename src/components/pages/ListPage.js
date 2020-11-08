@@ -3,15 +3,31 @@ import Pagination from "@material-ui/lab/Pagination";
 import IssueCard from "../molecules/IssueCard";
 import history from "../../config/history";
 import { withRouter } from "react-router";
-import getGithubApi from "../../api/githubApi";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { loadingState } from "../../recoil/atoms";
 
 const ListenPage = () => {
   const [allIssues, setAllIssues] = useState([]);
   const [issuesDisplayed, setIssuesDisplayed] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
+  const isLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
-    getGithubApi("/repos/facebook/react/issues", setsAllIssues);
+    isLoading(true);
+    axios
+      .create({
+        baseURL: "https://api.github.com",
+      })
+      .get("/repos/facebook/react/issues")
+      .then((res) => {
+        setsAllIssues(res.data);
+        isLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        isLoading(false);
+      });
   }, []);
   useEffect(() => {
     history.listen((location) => {

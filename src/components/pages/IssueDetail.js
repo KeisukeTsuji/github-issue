@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import getGithubApi from "../../api/githubApi";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { loadingState } from "../../recoil/atoms";
 
 const IssueCard = () => {
   const [issue, setIssue] = useState({});
+  const isLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
     getIssueNumber(window.location.pathname);
@@ -17,7 +20,20 @@ const IssueCard = () => {
     setIssue(data);
   };
   const fetchGithubIssueDetail = (number) => {
-    getGithubApi(`/repos/facebook/react/issues/${number}`, setsIssue);
+    isLoading(true);
+    axios
+      .create({
+        baseURL: "https://api.github.com",
+      })
+      .get(`/repos/facebook/react/issues/${number}`)
+      .then((res) => {
+        setsIssue(res.data);
+        isLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        isLoading(false);
+      });
   };
   return (
     <div>
