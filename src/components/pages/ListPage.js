@@ -7,7 +7,7 @@ import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../../recoil/atoms";
 
-const ListenPage = () => {
+const ListPage = () => {
   const [allIssues, setAllIssues] = useState([]);
   const [issuesDisplayed, setIssuesDisplayed] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
@@ -30,9 +30,16 @@ const ListenPage = () => {
       });
   }, []);
   useEffect(() => {
+    let isCleanUp = false;
     history.listen((location) => {
-      setsPageNumber(location.search, allIssues);
+      if (!isCleanUp) {
+        setsPageNumber(location.search, allIssues);
+      }
     });
+    const cleanup = () => {
+      isCleanUp = true;
+    };
+    return cleanup;
   }, [allIssues]);
 
   const setsAllIssues = (issues) => {
@@ -100,4 +107,4 @@ const ListenPage = () => {
     </Fragment>
   );
 };
-export default withRouter(ListenPage);
+export default withRouter(ListPage);
