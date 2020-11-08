@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const getGithubApi = (path, callback) => {
+const getGithubApi = (path, callback, isLoading) => {
+  isLoading(true);
   axios
     .create({
       baseURL: "https://api.github.com",
@@ -8,9 +9,11 @@ const getGithubApi = (path, callback) => {
     .get(path)
     .then((res) => {
       callback(res.data);
+      isLoading(false);
     })
     .catch((e) => {
       console.error(e);
+      isLoading(false);
     });
 };
 

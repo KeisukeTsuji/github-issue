@@ -3,9 +3,9 @@ import Pagination from "@material-ui/lab/Pagination";
 import IssueCard from "../molecules/IssueCard";
 import history from "../../config/history";
 import { withRouter } from "react-router";
-import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../../recoil/atoms";
+import getGithubApi from "../../api/githubApi";
 
 const ListPage = () => {
   const [allIssues, setAllIssues] = useState([]);
@@ -14,20 +14,7 @@ const ListPage = () => {
   const isLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
-    isLoading(true);
-    axios
-      .create({
-        baseURL: "https://api.github.com",
-      })
-      .get("/repos/facebook/react/issues")
-      .then((res) => {
-        setsAllIssues(res.data);
-        isLoading(false);
-      })
-      .catch((e) => {
-        console.error(e);
-        isLoading(false);
-      });
+    getGithubApi("/repos/facebook/react/issues", setsAllIssues, isLoading);
   }, []);
   useEffect(() => {
     let isCleanUp = false;
