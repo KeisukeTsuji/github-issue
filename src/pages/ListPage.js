@@ -62,6 +62,7 @@ const ListPage = () => {
                 number={issueDisplayed.number}
                 title={issueDisplayed.title}
                 index={i}
+                pageNumber={pageNumber}
               />
             </div>
           ))}
