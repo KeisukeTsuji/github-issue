@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import IssueCard from "../components/IssueCard";
 import history from "../config/history";
@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../recoil/atoms";
 import getGithubApi from "../api/githubApi";
-import "./styles/Listpage.css";
+import "./styles/Listpage.scss";
 
 const ListPage = () => {
   const [allIssues, setAllIssues] = useState([]);
@@ -59,7 +59,7 @@ const ListPage = () => {
     history.push(`/issues?page=${Math.floor(allIssues.length / 10)}`);
   };
   return (
-    <Fragment>
+    <div className="list-page">
       <div className="pagination-container">
         <button onClick={toFirstPage}>最初</button>
         <Pagination
@@ -70,16 +70,16 @@ const ListPage = () => {
         />
         <button onClick={() => toLastPage()}>最後</button>
       </div>
-      <div className="list-page">
+      <div className="issue-cards">
         <div className="issue-card-container">
-          {issuesDisplayed.map((userData) => (
-            <div key={userData.number} className="issue-card-wrapper">
-              <IssueCard number={userData.number} title={userData.title} />
+          {issuesDisplayed.map((issueDisplayed) => (
+            <div key={issueDisplayed.number} className="issue-card-wrapper">
+              <IssueCard number={issueDisplayed.number} title={issueDisplayed.title} />
             </div>
           ))}
         </div>
       </div>
-    </Fragment>
+    </div>
   );
 };
 export default withRouter(ListPage);

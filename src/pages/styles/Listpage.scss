@@ -1,0 +1,21 @@
+.list-page {
+  padding: 40px 0;
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  .issue-cards {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    width: 90%;
+    margin: auto;
+  }
+  .issue-card-container {
+    width: 100%;
+  }
+  .pagination-container {
+    display: flex;
+    justify-content: center;  
+  }
+}

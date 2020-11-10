@@ -1,0 +1,9 @@
+.issue-card {
+  padding: 16px;
+  border: 1px solid gray;
+  h4 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

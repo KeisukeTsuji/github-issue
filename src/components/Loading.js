@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useRecoilValue } from "recoil";
 import { loadingState } from "../recoil/atoms";
-import "./styles/Loading.css";
+import "./styles/Loading.scss";
 
 const Loading = () => {
   const loading = useRecoilValue(loadingState);
