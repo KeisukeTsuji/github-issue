@@ -5,7 +5,7 @@ import "./styles/IssueCard.scss";
 const IssueCard = (props) => {
   return (
     <Link to={`issues/${props.number}`}>
-      <article className={"issue-card" + " " + "issue-card-" + props.index}>
+      <article className={`issue-card issue-card-${props.index}`}>
         <h4>{props.title}</h4>
         <p>{props.number}</p>
       </article>
