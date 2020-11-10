@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import ListPage from "./pages/ListPage";
 import IssueDetail from "./pages/IssueDetail";
 import Loading from "./components/Loading";
 
 const ROUTER_BASENAME =
-  process.env.NODE_ENV === '/github-issues';
+  process.env.NODE_ENV === "development" ? "/" : "/github-issue";
 class App extends Component {
   render() {
     return (

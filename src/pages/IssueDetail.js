@@ -10,9 +10,9 @@ const IssueCard = () => {
 
   useEffect(() => {
     getGithubApi(
-      `/repos/facebook/react/issues/${Number(
-        window.location.pathname.replace("/issues/", "")
-      )}`,
+      `/repos/facebook/react/issues/${
+        window.location.pathname.split("/").slice(-1)[0]
+      }`,
       setsIssue,
       isLoading
     );
