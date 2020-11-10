@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./styles/IssueCard.css";
 
 const IssueCard = (props) => {
   return (
@@ -8,14 +9,6 @@ const IssueCard = (props) => {
         <h4>{props.title}</h4>
         <p>{props.number}</p>
       </article>
-      <style>{`
-        article {
-          max-width: 960px;
-          width: 100%;
-          padding: 16px;
-          border: 1px solid gray;
-        }
-      `}</style>
     </Link>
   );
 };

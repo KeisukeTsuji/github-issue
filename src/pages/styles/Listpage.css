@@ -1,0 +1,11 @@
+a {
+  text-decoration: none;
+  color: black;
+}
+.list-page {
+  display: flex;
+  justify-content: center;
+}
+.pagination-container {
+  display: flex;
+}

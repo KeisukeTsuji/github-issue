@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
-import { loadingState } from "../../recoil/atoms";
-import getGithubApi from "../../api/githubApi";
+import { loadingState } from "../recoil/atoms";
+import getGithubApi from "../api/githubApi";
 
 const IssueCard = () => {
   const [issue, setIssue] = useState({});

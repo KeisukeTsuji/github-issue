@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useEffect } from "react";
 import Pagination from "@material-ui/lab/Pagination";
-import IssueCard from "../molecules/IssueCard";
-import history from "../../config/history";
+import IssueCard from "../components/IssueCard";
+import history from "../config/history";
 import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
-import { loadingState } from "../../recoil/atoms";
-import getGithubApi from "../../api/githubApi";
+import { loadingState } from "../recoil/atoms";
+import getGithubApi from "../api/githubApi";
+import "./styles/Listpage.css";
 
 const ListPage = () => {
   const [allIssues, setAllIssues] = useState([]);
@@ -78,19 +79,6 @@ const ListPage = () => {
           ))}
         </div>
       </div>
-      <style>{`
-        a {
-          text-decoration: none;
-          color: black;
-        }
-        .list-page {
-          display: flex;
-          justify-content: center;
-        }
-        .pagination-container {
-          display: flex;
-        }
-      `}</style>
     </Fragment>
   );
 };

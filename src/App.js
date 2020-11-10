@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import ListPage from "./components/pages/ListPage";
-import IssueDetail from "./components/pages/IssueDetail";
-import Loading from "./components/atoms/Loading";
+import ListPage from "./pages/ListPage";
+import IssueDetail from "./pages/IssueDetail";
+import Loading from "./components/Loading";
 
 class App extends Component {
   render() {
