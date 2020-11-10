@@ -56,11 +56,12 @@ const ListPage = () => {
       <PaginationContainer allIssues={allIssues} pageNumber={pageNumber} />
       <div className="issue-cards">
         <div className="issue-card-container">
-          {issuesDisplayed.map((issueDisplayed) => (
+          {issuesDisplayed.map((issueDisplayed, i) => (
             <div key={issueDisplayed.number} className="issue-card-wrapper">
               <IssueCard
                 number={issueDisplayed.number}
                 title={issueDisplayed.title}
+                index={i}
               />
             </div>
           ))}

@@ -10,3 +10,6 @@
 .issue-card:hover {
   background-color: whitesmoke;
 }
+.issue-card:not(.issue-card-0) {
+  border-top: none;
+}
