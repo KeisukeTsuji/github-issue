@@ -1,4 +1,5 @@
 import React from "react";
+import { ROUTER_BASENAME } from "../config/routerBaseName";
 import Pagination from "@material-ui/lab/Pagination";
 import Button from "@material-ui/core/Button";
 import history from "../config/history";
@@ -6,13 +7,15 @@ import "./styles/paginationContainer.scss";
 
 const PaginationContainer = (props) => {
   const toFirstPage = () => {
-    history.push("/issues?page=1");
+    history.push(`${ROUTER_BASENAME}issues?page=1`);
   };
   const toLastPage = () => {
-    history.push(`/issues?page=${Math.floor(props.allIssues.length / 10)}`);
+    history.push(
+      `${ROUTER_BASENAME}issues?page=${Math.floor(props.allIssues.length / 10)}`
+    );
   };
   const handleClickPagination = (e, n) => {
-    history.push(`/issues?page=${n}`);
+    history.push(`${ROUTER_BASENAME}issues?page=${n}`);
   };
 
   return (
