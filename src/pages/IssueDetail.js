@@ -3,7 +3,7 @@ import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../recoil/atoms";
 import getGithubApi from "../api/githubApi";
-import "./styles/IssueDetail.scss"
+import "./styles/IssueDetail.scss";
 
 const IssueCard = () => {
   const [issue, setIssue] = useState({});
@@ -17,12 +17,13 @@ const IssueCard = () => {
       setsIssue,
       isLoading
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const setsIssue = (data) => {
     setIssue(data);
   };
   return (
-    <div class="issue-detail">
+    <div className="issue-detail">
       <article className="issue-info">
         <p>{issue.number}</p>
         <h1>{issue.title}</h1>

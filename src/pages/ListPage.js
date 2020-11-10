@@ -16,6 +16,7 @@ const ListPage = () => {
 
   useEffect(() => {
     getGithubApi("/repos/facebook/react/issues", setsAllIssues, isLoading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     let isCleanUp = false;
@@ -28,6 +29,7 @@ const ListPage = () => {
       isCleanUp = true;
     };
     return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allIssues]);
 
   const setsAllIssues = (issues) => {
@@ -74,7 +76,10 @@ const ListPage = () => {
         <div className="issue-card-container">
           {issuesDisplayed.map((issueDisplayed) => (
             <div key={issueDisplayed.number} className="issue-card-wrapper">
-              <IssueCard number={issueDisplayed.number} title={issueDisplayed.title} />
+              <IssueCard
+                number={issueDisplayed.number}
+                title={issueDisplayed.title}
+              />
             </div>
           ))}
         </div>
