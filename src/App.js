@@ -7,7 +7,7 @@ import IssueDetail from "./pages/IssueDetail";
 import Loading from "./components/Loading";
 
 const ROUTER_BASENAME =
-  process.env.NODE_ENV === 'development' ? '/' : '/github-issues';
+  process.env.NODE_ENV === '/github-issues';
 class App extends Component {
   render() {
     return (
