@@ -5,24 +5,29 @@ import history from "../config/history";
 import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../recoil/atoms";
-import getGithubApi from "../api/githubApi";
+import { getGithubApiIssuePage } from "../api/githubApi";
 import "./styles/Listpage.scss";
 
 const ListPage = () => {
-  const [allIssues, setAllIssues] = useState([]);
   const [issuesDisplayed, setIssuesDisplayed] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
+  const [allPagesNumber, setAllPagesNumber] = useState(0);
   const isLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
-    getGithubApi("/repos/facebook/react/issues", setsAllIssues, isLoading);
+    const searchNumber = window.location.search.replace("?page=", "");
+    getGithubApiIssuePage(
+      `/repos/facebook/react/issues?page=${searchNumber}&per_page=10`,
+      setsIssuesDisplayed,
+      isLoading
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     let isCleanUp = false;
     history.listen((location) => {
       if (!isCleanUp) {
-        setsPageNumber(location.search, allIssues);
+        setsPageNumber(location.search, issuesDisplayed);
       }
     });
     const cleanup = () => {
@@ -30,30 +35,31 @@ const ListPage = () => {
     };
     return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allIssues]);
+  }, [issuesDisplayed]);
 
-  const setsAllIssues = (issues) => {
-    setAllIssues(issues);
+  const setsIssuesDisplayed = (issues, page) => {
+    setAllPagesNumber(page);
+    setIssuesDisplayed(issues);
     setsPageNumber(window.location.search, issues);
   };
-  const displayListPathMatched = (n, issues) => {
-    setIssuesDisplayed([]);
-    const tmpArr = [];
-    for (let i = (n - 1) * 10; i < n * 10; i++) {
-      if (issues[i]) {
-        tmpArr.push(issues[i]);
-      }
-    }
-    setIssuesDisplayed(tmpArr);
+  const setsPageNumber = (search) => {
+    const page = Number(search.replace("?page=", ""));
+    setPageNumber(page);
   };
-  const setsPageNumber = (search, issues) => {
-    const tmpNumber = Number(search.replace("?page=", ""));
-    displayListPathMatched(tmpNumber, issues);
-    setPageNumber(tmpNumber);
+  const getGithubApiSetPage = (page) => {
+    getGithubApiIssuePage(
+      `/repos/facebook/react/issues?page=${page}&per_page=10`,
+      setsIssuesDisplayed,
+      isLoading
+    );
   };
   return (
     <div className="list-page">
-      <PaginationContainer allIssues={allIssues} pageNumber={pageNumber} />
+      <PaginationContainer
+        allPagesNumber={allPagesNumber}
+        pageNumber={pageNumber}
+        getGithubApiSetPage={getGithubApiSetPage}
+      />
       <div className="issue-cards">
         <div className="issue-card-container">
           {issuesDisplayed.map((issueDisplayed, i) => (

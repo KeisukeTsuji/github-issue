@@ -8,21 +8,22 @@ import "./styles/paginationContainer.scss";
 const PaginationContainer = (props) => {
   const toFirstPage = () => {
     history.push(`${ROUTER_BASENAME}issues?page=1`);
+    props.getGithubApiSetPage(1);
   };
   const toLastPage = () => {
-    history.push(
-      `${ROUTER_BASENAME}issues?page=${Math.floor(props.allIssues.length / 10)}`
-    );
+    history.push(`${ROUTER_BASENAME}issues?page=${props.allPagesNumber}`);
+    props.getGithubApiSetPage(props.allPagesNumber);
   };
   const handleClickPagination = (e, n) => {
     history.push(`${ROUTER_BASENAME}issues?page=${n}`);
+    props.getGithubApiSetPage(n);
   };
 
   return (
     <div className="pagination-container">
       <Button onClick={() => toFirstPage()}>最初</Button>
       <Pagination
-        count={Math.floor(props.allIssues.length / 10)}
+        count={Number(props.allPagesNumber)}
         page={props.pageNumber}
         color="primary"
         onChange={(e, n) => handleClickPagination(e, n)}
