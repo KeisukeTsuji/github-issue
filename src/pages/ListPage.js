@@ -5,7 +5,7 @@ import history from "../config/history";
 import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../recoil/atoms";
-import { getGithubApiIssuePage } from "../api/githubApi";
+import { getGithubApiWithPageNumber } from "../api/githubApi";
 import "./styles/Listpage.scss";
 
 const ListPage = () => {
@@ -16,7 +16,7 @@ const ListPage = () => {
 
   useEffect(() => {
     const searchNumber = window.location.search.replace("?page=", "");
-    getGithubApiIssuePage(
+    getGithubApiWithPageNumber(
       `/repos/facebook/react/issues?page=${searchNumber}&per_page=10`,
       setsIssuesDisplayed,
       isLoading
@@ -47,7 +47,7 @@ const ListPage = () => {
     setPageNumber(page);
   };
   const getGithubApiSetPage = (page) => {
-    getGithubApiIssuePage(
+    getGithubApiWithPageNumber(
       `/repos/facebook/react/issues?page=${page}&per_page=10`,
       setsIssuesDisplayed,
       isLoading

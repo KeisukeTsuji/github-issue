@@ -3,7 +3,7 @@ import { withRouter } from "react-router";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 import { loadingState, pageNumberState } from "../recoil/atoms";
-import { getGithubApiIssueDetail } from "../api/githubApi";
+import { getGithubApi } from "../api/githubApi";
 import "./styles/IssueDetail.scss";
 
 const IssueCard = () => {
@@ -12,7 +12,7 @@ const IssueCard = () => {
   const pageNumber = useRecoilValue(pageNumberState);
 
   useEffect(() => {
-    getGithubApiIssueDetail(
+    getGithubApi(
       `/repos/facebook/react/issues/${
         window.location.pathname.split("/").slice(-1)[0]
       }`,

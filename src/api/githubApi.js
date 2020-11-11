@@ -1,13 +1,11 @@
 import axios from "axios";
 const parse = require("parse-link-header");
 const baseURL = "https://api.github.com";
+const axiosUrlSet = axios.create({ baseURL });
 
-export const getGithubApiIssuePage = (path, callback, isLoading) => {
+export const getGithubApiWithPageNumber = (path, callback, isLoading) => {
   isLoading(true);
-  axios
-    .create({
-      baseURL: baseURL,
-    })
+  axiosUrlSet
     .get(path)
     .then((res) => {
       const parsed = parse(res.headers.link);
@@ -25,12 +23,9 @@ export const getGithubApiIssuePage = (path, callback, isLoading) => {
     });
 };
 
-export const getGithubApiIssueDetail = (path, callback, isLoading) => {
+export const getGithubApi = (path, callback, isLoading) => {
   isLoading(true);
-  axios
-    .create({
-      baseURL: baseURL,
-    })
+  axiosUrlSet
     .get(path)
     .then((res) => {
       callback(res.data);
