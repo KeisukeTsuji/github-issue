@@ -1,3 +1,28 @@
+# 動作するURL
+
+https://keisuketsuji.github.io/github-issue/
+
+# 実装方針
+
+Create React Appで作成。   
+冗長なコードを避けるため、react hooksを使用。  
+状態管理はrecoilを使用。  
+Pages、その中で使用されるstateについてはコンポーネント内で管理する。  
+Pages内で納まらない状態管理はrecoilで行う。  
+
+src直下に作成したディレクトリとその責務は以下の通りです。
+
+```
+
+.
+├── api         api通信の処理
+├── components  pagesから呼ばれる
+├── config      設定関係
+├── pages       ページコンポーネント
+└── recoil      状態管理
+
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
