@@ -18,30 +18,9 @@ const ListPage = () => {
   useEffect(() => {
     const searchNumber = window.location.search.replace("?page=", "");
     isLoading(true);
-    async function fetchGithubApi() {
-      const res = await getGithubApi(
-        `/repos/facebook/react/issues?page=${searchNumber}&per_page=10`
-      );
-      try {
-        const parsed = parse(res.headers.link);
-        if (parsed.last) {
-          setsIssuesDisplayed(res.data, parsed.last.page);
-        } else {
-          // 最後のページの場合 parsed.last.page が取得できないので window.location.search から取得
-          setsIssuesDisplayed(
-            res.data,
-            window.location.search.replace("?page=", "")
-          );
-        }
-        isLoading(false);
-      } catch (e) {
-        console.log(e);
-        alert("データが取得できませんでした。");
-      } finally {
-        isLoading(false);
-      }
-    }
-    fetchGithubApi();
+    fetchGithubApi(
+      `/repos/facebook/react/issues?page=${searchNumber}&per_page=10`
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -69,9 +48,10 @@ const ListPage = () => {
   };
   const getGithubApiSetPage = async (page) => {
     isLoading(true);
-    const res = await getGithubApi(
-      `/repos/facebook/react/issues?page=${page}&per_page=10`
-    );
+    fetchGithubApi(`/repos/facebook/react/issues?page=${page}&per_page=10`)
+  };
+  const fetchGithubApi = async (url) => {
+    const res = await getGithubApi(url);
     try {
       const parsed = parse(res.headers.link);
       if (parsed.last) {
@@ -83,6 +63,7 @@ const ListPage = () => {
           window.location.search.replace("?page=", "")
         );
       }
+      isLoading(false);
     } catch (e) {
       console.error(e);
       alert("データが取得できませんでした。");
