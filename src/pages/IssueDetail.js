@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { loadingState, pageNumberState } from "../recoil/atoms";
 import { getGithubApi } from "../api/githubApi";
 import "./styles/IssueDetail.scss";
+const marked = require("marked");
 
 const IssueCard = () => {
   const [issue, setIssue] = useState({});
@@ -34,13 +35,22 @@ const IssueCard = () => {
   const setsIssue = (data) => {
     setIssue(data);
   };
+  const MarkdownToHtml = (body) => {
+    if (body) {
+      return marked(body);
+    } else {
+      return "";
+    }
+  };
   return (
     <div className="issue-detail">
       <Link to={`/issues?page=${pageNumber}`}>issue一覧に戻る</Link>
       <article className="issue-info">
         <p>{issue.number}</p>
         <h1>{issue.title}</h1>
-        <section>{issue.body}</section>
+        <section
+          dangerouslySetInnerHTML={{ __html: MarkdownToHtml(issue.body) }}
+        />
       </article>
     </div>
   );
