@@ -5,8 +5,9 @@ import history from "../config/history";
 import { withRouter } from "react-router";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "../recoil/atoms";
-import { getGithubApiWithPageNumber } from "../api/githubApi";
+import { getGithubApi } from "../api/githubApi";
 import "./styles/Listpage.scss";
+const parse = require("parse-link-header");
 
 const ListPage = () => {
   const [issuesDisplayed, setIssuesDisplayed] = useState([]);
@@ -16,11 +17,31 @@ const ListPage = () => {
 
   useEffect(() => {
     const searchNumber = window.location.search.replace("?page=", "");
-    getGithubApiWithPageNumber(
-      `/repos/facebook/react/issues?page=${searchNumber}&per_page=10`,
-      setsIssuesDisplayed,
-      isLoading
-    );
+    isLoading(true);
+    async function fetchGithubApi() {
+      const res = await getGithubApi(
+        `/repos/facebook/react/issues?page=${searchNumber}&per_page=10`
+      );
+      try {
+        const parsed = parse(res.headers.link);
+        if (parsed.last) {
+          setsIssuesDisplayed(res.data, parsed.last.page);
+        } else {
+          // 最後のページの場合 parsed.last.page が取得できないので window.location.search から取得
+          setsIssuesDisplayed(
+            res.data,
+            window.location.search.replace("?page=", "")
+          );
+        }
+        isLoading(false);
+      } catch (e) {
+        console.log(e);
+        alert("データが取得できませんでした。");
+      } finally {
+        isLoading(false);
+      }
+    }
+    fetchGithubApi();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -46,12 +67,28 @@ const ListPage = () => {
     const page = Number(search.replace("?page=", ""));
     setPageNumber(page);
   };
-  const getGithubApiSetPage = (page) => {
-    getGithubApiWithPageNumber(
-      `/repos/facebook/react/issues?page=${page}&per_page=10`,
-      setsIssuesDisplayed,
-      isLoading
+  const getGithubApiSetPage = async (page) => {
+    isLoading(true);
+    const res = await getGithubApi(
+      `/repos/facebook/react/issues?page=${page}&per_page=10`
     );
+    try {
+      const parsed = parse(res.headers.link);
+      if (parsed.last) {
+        setsIssuesDisplayed(res.data, parsed.last.page);
+      } else {
+        // 最後のページの場合 parsed.last.page が取得できないので window.location.search から取得
+        setsIssuesDisplayed(
+          res.data,
+          window.location.search.replace("?page=", "")
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      alert("データが取得できませんでした。");
+    } finally {
+      isLoading(false);
+    }
   };
   return (
     <div className="list-page">

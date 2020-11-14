@@ -12,13 +12,23 @@ const IssueCard = () => {
   const pageNumber = useRecoilValue(pageNumberState);
 
   useEffect(() => {
-    getGithubApi(
-      `/repos/facebook/react/issues/${
-        window.location.pathname.split("/").slice(-1)[0]
-      }`,
-      setsIssue,
-      isLoading
-    );
+    isLoading(true);
+    async function fetchGithubApi() {
+      const res = await getGithubApi(
+        `/repos/facebook/react/issues/${
+          window.location.pathname.split("/").slice(-1)[0]
+        }`
+      );
+      try {
+        setsIssue(res.data);
+      } catch (e) {
+        console.error(e);
+        alert("データが取得できませんでした。");
+      } finally {
+        isLoading(false);
+      }
+    }
+    fetchGithubApi();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const setsIssue = (data) => {
