@@ -15,12 +15,12 @@ const IssueCard = () => {
   useEffect(() => {
     isLoading(true);
     async function fetchGithubApi() {
-      const res = await getGithubApi(
-        `/repos/facebook/react/issues/${
-          window.location.pathname.split("/").slice(-1)[0]
-        }`
-      );
       try {
+        const res = await getGithubApi(
+          `/repos/facebook/react/issues/${
+            window.location.pathname.split("/").slice(-1)[0]
+          }`
+        );
         setsIssue(res.data);
       } catch (e) {
         console.error(e);

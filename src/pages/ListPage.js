@@ -51,8 +51,8 @@ const ListPage = () => {
     fetchGithubApi(`/repos/facebook/react/issues?page=${page}&per_page=10`)
   };
   const fetchGithubApi = async (url) => {
-    const res = await getGithubApi(url);
     try {
+      const res = await getGithubApi(url);
       const parsed = parse(res.headers.link);
       if (parsed.last) {
         setsIssuesDisplayed(res.data, parsed.last.page);
